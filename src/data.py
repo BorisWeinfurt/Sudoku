@@ -6,9 +6,9 @@ class Board:
     def addDigit(Position, digit):
 
 class Position:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
+    def __init__(self, row, col):
+        self.row = row
+        self.col = col
 
 class PencilMarks:
     def __init__(self):
