@@ -1,3 +1,5 @@
+import data
+
 class BoardDriver:
 
     def __init__(self):
@@ -14,17 +16,21 @@ class BoardDriver:
             [0, 0, 0, 0, 8, 0, 0, 7, 9]
         ]
         self.board = sudoku_puzzle
+        self.num_digits = 30
 
     def add_digit(self, Position, digit):
-        if checkPositionValid(Position):
+        if self.checkPositionValid(Position, digit):
             self.board[Position.row][Position.col] = digit
+            self.num_digits += 1
             return True
         return False
 
     def checkPositionValid(self, Position, digit):
-        row = getRow(Position.row)
-        col = getCol(Position.col)
-        box = getBox(Position.row // 3 * 3 + Position.col // 3)
+        if self.board[Position.row][Position.col] != 0:
+            return False
+        row = self.getRow(Position.row)
+        col = self.getCol(Position.col)
+        box = self.getBox(Position.row // 3 * 3 + Position.col // 3)
 
         return digit not in row and digit not in col and digit not in box
 
@@ -56,4 +62,4 @@ class BoardDriver:
                 " ".join(map(str, row[6:])))
 
     def isComplete(self):
-        
+        return self.num_digits == 81

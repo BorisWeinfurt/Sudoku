@@ -1,9 +1,4 @@
-class Board:
 
-    def __init__(digits):
-
-    
-    def addDigit(Position, digit):
 
 class Position:
     def __init__(self, row, col):
