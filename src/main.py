@@ -14,6 +14,7 @@ def player_play_game(driver):
     while not driver.isComplete():
         # Display the current state of the board
         driver.printBoard()
+        print()
 
         # Get user input for row, column, and digit
         row = int(input("Enter the row (1-9): ")) - 1
@@ -23,9 +24,9 @@ def player_play_game(driver):
         # Validate and add the player's guess
         position = data.Position(row, col)
         if driver.add_digit(position, digit):
-            print("Your guess is correct!")
+            print("Your guess is correct!\n")
         else:
-            print("Invalid guess. Try again.")
+            print("Invalid guess. Try again.\n")
 
     print("Congratulations! You've completed the Sudoku puzzle.")
 

@@ -2,7 +2,7 @@
 # It a difficulty based on that
 
 def generateDifficulty(difficult):
-
+    return False
 
 def classifyDifficulty(board):
-
+    return False
