@@ -1,7 +1,14 @@
+"""
+Main module runs the sudoku
+User will be able to specify which functionality will be used
+"""
 import data
 import boardDriver
 
+
+
 def main():
+    """Main method creates a sudoku board and gives it to either the player or solver"""
     # Initialize the Sudoku board
     driver = boardDriver.BoardDriver()
 
@@ -9,11 +16,12 @@ def main():
     player_play_game(driver)
 
 def player_play_game(driver):
+    """User interactive terminal based sudoku game"""
     print("Welcome to Sudoku!")
 
-    while not driver.isComplete():
+    while not driver.is_complete():
         # Display the current state of the board
-        driver.printBoard()
+        driver.print_board()
         print()
 
         # Get user input for row, column, and digit

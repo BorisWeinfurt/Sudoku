@@ -1,7 +1,7 @@
-import data
+"""Holds data and methods used to manipulate the board"""
 
 class BoardDriver:
-
+    """Holds data and methods used to manipulate the board"""
     def __init__(self):
         #temporary until custom puzzles are implemented
         sudoku_puzzle = [
@@ -18,32 +18,37 @@ class BoardDriver:
         self.board = sudoku_puzzle
         self.num_digits = 30
 
-    def add_digit(self, Position, digit):
-        if self.checkPositionValid(Position, digit):
-            self.board[Position.row][Position.col] = digit
+    def add_digit(self, position, digit):
+        """Add a digit to a specific position on the board"""
+        if self.check_position_valid(position, digit):
+            self.board[position.row][position.col] = digit
             self.num_digits += 1
             return True
         return False
 
-    def checkPositionValid(self, Position, digit):
-        if self.board[Position.row][Position.col] != 0:
+    def check_position_valid(self, position, digit):
+        """Check whether or not a digit can be placed at a certain position"""
+        if self.board[position.row][position.col] != 0:
             return False
-        row = self.getRow(Position.row)
-        col = self.getCol(Position.col)
-        box = self.getBox(Position.row // 3 * 3 + Position.col // 3)
+        row = self.get_row(position.row)
+        col = self.get_col(position.col)
+        box = self.get_box(position.row // 3 * 3 + position.col // 3)
 
         return digit not in row and digit not in col and digit not in box
 
-    def getRow(self, rowIndex):
+    def get_row(self, rowIndex):
+        """Get the current digits in the specified row"""
         return self.board[rowIndex]
-    
-    def getCol(self, colIndex):
+
+    def get_col(self, colIndex):
+        """Get the current digits in the specified col"""
         col = []
         for row in self.board:
             col.append(row[colIndex])
         return col
-    
-    def getBox(self, box):
+
+    def get_box(self, box):
+        """Get the current digits in the specified box"""
         initRow = box // 3
         initCol = box % 3
 
@@ -53,7 +58,8 @@ class BoardDriver:
                 box_values.append(self.board[row][col])
         return box_values
 
-    def printBoard(self):
+    def print_board(self):
+        """Prints a terminal representation of the current board state"""
         for i, row in enumerate(self.board):
             if i % 3 == 0 and i != 0:
                 print("-"*21)  # Add horizontal line every 3 rows
@@ -61,5 +67,6 @@ class BoardDriver:
                 " ".join(map(str, row[3:6])) + " | " +
                 " ".join(map(str, row[6:])))
 
-    def isComplete(self):
+    def is_complete(self):
+        """Checks whether or not the puzzle is complete based on the number or complete digits"""
         return self.num_digits == 81
