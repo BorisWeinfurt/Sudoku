@@ -3,14 +3,14 @@ Main module runs the sudoku
 User will be able to specify which functionality will be used
 """
 import data
-import boardDriver
+import board_driver
 
 
 
 def main():
     """Main method creates a sudoku board and gives it to either the player or solver"""
     # Initialize the Sudoku board
-    driver = boardDriver.BoardDriver()
+    driver = board_driver.BoardDriver()
 
     # Play the game
     player_play_game(driver)

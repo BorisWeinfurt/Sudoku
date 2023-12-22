@@ -1,5 +1,6 @@
-# Determines the techniques needed to solve a puzzle and then assigns
-# It a difficulty based on that
+"""Utilize human solving techniques to give useful information
+about sudoku boards
+"""
 
 def generate_difficulty(difficulty):
     """"Generates a puzzle of the given difficulty and returns it"""

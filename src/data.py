@@ -9,6 +9,14 @@ class Position:
         self.row = row
         self.col = col
 
+    def get_row(self):
+        """Get the row"""
+        return self.row
+
+    def get_col(self):
+        """Get the column"""
+        return self.col
+
 class PencilMarks:
     """Class holds the possible digits in a given square that doesnt yet have a digit
     """

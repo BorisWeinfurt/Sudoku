@@ -36,25 +36,25 @@ class BoardDriver:
 
         return digit not in row and digit not in col and digit not in box
 
-    def get_row(self, rowIndex):
+    def get_row(self, row_index):
         """Get the current digits in the specified row"""
-        return self.board[rowIndex]
+        return self.board[row_index]
 
-    def get_col(self, colIndex):
+    def get_col(self, col_index):
         """Get the current digits in the specified col"""
         col = []
         for row in self.board:
-            col.append(row[colIndex])
+            col.append(row[col_index])
         return col
 
     def get_box(self, box):
         """Get the current digits in the specified box"""
-        initRow = box // 3
-        initCol = box % 3
+        init_row = box // 3
+        init_col = box % 3
 
         box_values = []
-        for row in range(initRow * 3, initRow * 3 + 3):
-            for col in range(initCol * 3, initCol * 3 + 3):
+        for row in range(init_row * 3, init_row * 3 + 3):
+            for col in range(init_col * 3, init_col * 3 + 3):
                 box_values.append(self.board[row][col])
         return box_values
 
