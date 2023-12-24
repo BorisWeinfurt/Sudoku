@@ -5,14 +5,14 @@ from data import PencilMarks
 def fill_pencil_marks(board_driver : BoardDriver):
     """Create pencilmarks for all missing digits in the puzzle"""
     SIZE = 10  # Constant for the size of the puzzle
-    columns = [board_driver.get_col(i) for i in range(1, SIZE)]
-    boxes = [board_driver.get_box(i) for i in range(1, SIZE)]
+    columns = [board_driver.get_col(i) for i in range(0, SIZE-1)]
+    boxes = [board_driver.get_box(i) for i in range(0, SIZE-1)]
     board = board_driver.get_board_data()
 
     pencil_data = []
-    for row, row_id in enumerate(board):
+    for row_id, row in enumerate(board):
         row_of_pencil_marks = []
-        for digit, col_id in enumerate(row):
+        for col_id, digit in enumerate(row):
             if digit == 0:
                 row_of_pencil_marks.append(None)
                 continue
@@ -34,10 +34,10 @@ def fill_pencil_marks(board_driver : BoardDriver):
         pencil_data.append(row_of_pencil_marks)
     return pencil_data
 
-def single_position():
+def single_position(pencil_marks, driver):
     """Single position in a row, col, or box that a digit could go"""
     return False
 
-def single_candidate():
-    """Single digit possible for a given box"""
-    return False
+def single_candidate(pencil_marks, driver):
+    """Single digit possible for a given square"""
+    

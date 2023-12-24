@@ -4,16 +4,19 @@ User will be able to specify which functionality will be used
 """
 import data
 import board_driver
-
+import classification
 
 
 def main():
     """Main method creates a sudoku board and gives it to either the player or solver"""
     # Initialize the Sudoku board
-    driver = board_driver.BoardDriver(data.sudoku_puzzle_test)
+    # driver = board_driver.BoardDriver(data.sudoku_puzzle_test)
+
+    # Puzzle classification
+    classification.classify_difficulty(data.sudoku_puzzle_easy)
 
     # Play the game
-    player_play_game(driver)
+    # player_play_game(driver)
 
 def player_play_game(driver):
     """User interactive terminal based sudoku game"""

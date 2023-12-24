@@ -12,14 +12,20 @@ def generate_difficulty(difficulty):
 
 def classify_difficulty(board):
     """Determines the difficulty of the provided puzzle"""
-    driver = board_driver.BoardDriver(data.sudoku_puzzle_test)
-    pencil_marks = techniques.fill_pencil_marks(board)
+    driver = board_driver.BoardDriver(board)
+    pencil_marks = techniques.fill_pencil_marks(driver)
 
     difficulty = 0
     while True:
-        if techniques.single_position():
+        if techniques.single_position(pencil_marks, driver):
             difficulty += 100
-        elif techniques.single_candidate():
+            continue
+        if techniques.single_candidate(pencil_marks, driver):
             difficulty += 100
+            continue
+        if driver.is_complete():
+            print("puzzles is solved")
+            break
+        print("puzzle cannot be solved")
         break
-    return board
+    driver.print_board()
