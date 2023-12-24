@@ -63,3 +63,8 @@ class BoardDriver:
     def is_complete(self):
         """Checks whether or not the puzzle is complete based on the number or complete digits"""
         return self.num_digits == 81
+
+    def get_board_data(self):
+        """Returns the current data of the board that the driver is representing"""
+        return self.board
+    
