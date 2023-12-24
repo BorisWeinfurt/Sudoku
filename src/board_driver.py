@@ -1,5 +1,5 @@
 """Holds data and methods used to manipulate the board"""
-
+from pencil_marks import PencilMarkBoard
 class BoardDriver:
     """Holds data and methods used to manipulate the board"""
     def __init__(self, board):
@@ -10,12 +10,14 @@ class BoardDriver:
                 if element != 0:
                     count += 1
         self.num_digits = count
+        self.pencil_marks = PencilMarkBoard(self)
 
     def add_digit(self, position, digit):
         """Add a digit to a specific position on the board"""
         if self.check_position_valid(position, digit):
             self.board[position.row][position.col] = digit
             self.num_digits += 1
+            self.pencil_marks.update_pencil_data(position, digit)
             return True
         return False
 
@@ -67,4 +69,7 @@ class BoardDriver:
     def get_board_data(self):
         """Returns the current data of the board that the driver is representing"""
         return self.board
+    
+    def get_pencil_data(self):
+        return self.pencil_marks
     
