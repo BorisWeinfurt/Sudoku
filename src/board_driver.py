@@ -2,21 +2,14 @@
 
 class BoardDriver:
     """Holds data and methods used to manipulate the board"""
-    def __init__(self):
-        #temporary until custom puzzles are implemented
-        sudoku_puzzle = [
-            [5, 3, 0, 0, 7, 0, 0, 0, 0],
-            [6, 0, 0, 1, 9, 5, 0, 0, 0],
-            [0, 9, 8, 0, 0, 0, 0, 6, 0],
-            [8, 0, 0, 0, 6, 0, 0, 0, 3],
-            [4, 0, 0, 8, 0, 3, 0, 0, 1],
-            [7, 0, 0, 0, 2, 0, 0, 0, 6],
-            [0, 6, 0, 0, 0, 0, 2, 8, 0],
-            [0, 0, 0, 4, 1, 9, 0, 0, 5],
-            [0, 0, 0, 0, 8, 0, 0, 7, 9]
-        ]
-        self.board = sudoku_puzzle
-        self.num_digits = 30
+    def __init__(self, board):
+        self.board = board
+        count = 0
+        for row in board:
+            for element in row:
+                if element != 0:
+                    count += 1
+        self.num_digits = count
 
     def add_digit(self, position, digit):
         """Add a digit to a specific position on the board"""
