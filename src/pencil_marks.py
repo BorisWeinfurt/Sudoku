@@ -35,7 +35,6 @@ class PencilMarkBoard:
                         pencil_mark.add_digit(possible_digit)
 
                 row_of_pencil_marks.append(pencil_mark)
-                print(pencil_mark.get_pencil_marks())
             pencil_data.append(row_of_pencil_marks)
 
         return pencil_data

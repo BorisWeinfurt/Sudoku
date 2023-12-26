@@ -16,7 +16,6 @@ class BoardDriver:
     def add_digit(self, position, digit):
         """Add a digit to a specific position on the board"""
         if self.check_position_valid(position, digit):
-            print("added digit")
             self.board[position.row][position.col] = digit
             self.num_digits += 1
             self.pencil_marks.update_pencil_data(position, digit)

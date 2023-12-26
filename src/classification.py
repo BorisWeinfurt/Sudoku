@@ -17,11 +17,11 @@ def classify_difficulty(board):
     difficulty = 0
     while True:
         if techniques.single_position(driver):
+            print("single position success")
             difficulty += 100
             continue
         if techniques.single_candidate(driver):
-            print("Succsesful single candidate")
-            driver.print_board()
+            print("single candidate success")
             difficulty += 100
             continue
         if driver.is_complete():
