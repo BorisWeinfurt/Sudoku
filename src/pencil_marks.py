@@ -1,6 +1,7 @@
 """Data for maintaining pencil marks accross tiles and/or board"""
-from data import Position
+
 from typing import List
+from data import Position
 
 class PencilMarkBoard:
     """Maintains a 2d array of pencilmarks to represent the whole board"""
@@ -9,21 +10,21 @@ class PencilMarkBoard:
 
     def fill_pencil_marks(self, board_driver):
         """Create pencilmarks for all missing digits in the puzzle"""
-        SIZE = 10  # Constant for the size of the puzzle
-        columns = [board_driver.get_col(i) for i in range(0, SIZE-1)]
-        boxes = [board_driver.get_box(i) for i in range(0, SIZE-1)]
+        size = 10  # Constant for the size of the puzzle
+        columns = [board_driver.get_col(i) for i in range(0, size-1)]
+        boxes = [board_driver.get_box(i) for i in range(0, size-1)]
 
         pencil_data : List[List[PencilMarks]] = []
         for row_id, row in enumerate(board_driver.get_board_data()):
             row_of_pencil_marks = []
             for col_id, digit in enumerate(row):
-                if digit == 0:
+                if digit != 0:
                     row_of_pencil_marks.append(None)
                     continue
                 box_id = (row_id // 3) * 3 + (col_id // 3)
 
                 pencil_mark = PencilMarks()
-                for possible_digit in range(1, SIZE):
+                for possible_digit in range(1, size):
                     conditions = (
                         possible_digit not in row,
                         possible_digit not in columns[col_id],
@@ -34,8 +35,9 @@ class PencilMarkBoard:
                         pencil_mark.add_digit(possible_digit)
 
                 row_of_pencil_marks.append(pencil_mark)
-
+                print(pencil_mark.get_pencil_marks())
             pencil_data.append(row_of_pencil_marks)
+
         return pencil_data
 
     def update_pencil_data(self, position: Position, digit: int):
@@ -62,8 +64,9 @@ class PencilMarkBoard:
             for box_col in range(box_start_col, box_start_col + 3):
                 if self.pencil_data[box_row][box_col] is not None:
                     self.pencil_data[box_row][box_col].remove_digit(digit)
-    
+
     def dump_pencil_data(self):
+        """Return all the pencil marks in array form for data manipulation"""
         return self.pencil_data
 
 
@@ -72,7 +75,7 @@ class PencilMarks:
     """
     def __init__(self):
         # Initialize with all digits marked
-        self.digits = list(range(1, 10))
+        self.digits = []
 
     def add_digit(self, digit):
         """
@@ -92,3 +95,4 @@ class PencilMarks:
         """Get the current pencilmarks"""
         # Return the list of remaining pencil marks
         return self.digits
+    

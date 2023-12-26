@@ -11,7 +11,6 @@ def main():
     """Main method creates a sudoku board and gives it to either the player or solver"""
     # Initialize the Sudoku board
     driver = board_driver.BoardDriver(data.sudoku_puzzle_test)
-
     # Puzzle classification
     classification.classify_difficulty(data.sudoku_puzzle_easy)
 

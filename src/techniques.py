@@ -7,6 +7,7 @@ def single_position(driver):
 
 def single_candidate(driver : BoardDriver):
     """Single digit possible for a given square"""
+    # print("entering single cndaidate")
     for row_num, row in enumerate(driver.get_pencil_data().dump_pencil_data()):
         for col_num, pencil_mark in enumerate(row):
             if pencil_mark is not None:

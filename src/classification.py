@@ -20,10 +20,12 @@ def classify_difficulty(board):
             difficulty += 100
             continue
         if techniques.single_candidate(driver):
+            print("Succsesful single candidate")
+            driver.print_board()
             difficulty += 100
             continue
         if driver.is_complete():
-            print("puzzles is solved")
+            print("Puzzle is solved!")
             break
         print("puzzle cannot be solved")
         break
