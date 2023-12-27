@@ -67,6 +67,28 @@ class PencilMarkBoard:
     def dump_pencil_data(self):
         """Return all the pencil marks in array form for data manipulation"""
         return self.pencil_data
+    
+    def get_row(self, row_index):
+        """Get the current digits in the specified row"""
+        return self.pencil_data[row_index]
+
+    def get_col(self, col_index):
+        """Get the current digits in the specified col"""
+        col = []
+        for row in self.pencil_data:
+            col.append(row[col_index])
+        return col
+
+    def get_box(self, box):
+        """Get the current digits in the specified box"""
+        init_row = box // 3
+        init_col = box % 3
+
+        box_values = []
+        for row in range(init_row * 3, init_row * 3 + 3):
+            for col in range(init_col * 3, init_col * 3 + 3):
+                box_values.append(self.pencil_data[row][col])
+        return box_values
 
 
 class PencilMarks:
