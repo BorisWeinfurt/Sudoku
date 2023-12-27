@@ -2,7 +2,6 @@
 
 from typing import List
 from data import Position
-
 class PencilMarkBoard:
     """Maintains a 2d array of pencilmarks to represent the whole board"""
     def __init__(self, driver):
@@ -67,7 +66,7 @@ class PencilMarkBoard:
     def dump_pencil_data(self):
         """Return all the pencil marks in array form for data manipulation"""
         return self.pencil_data
-    
+
     def get_row(self, row_index):
         """Get the current digits in the specified row"""
         return self.pencil_data[row_index]
@@ -84,7 +83,7 @@ class PencilMarkBoard:
         init_row = box // 3
         init_col = box % 3
 
-        box_values = []
+        box_values : List[PencilMarks] = []
         for row in range(init_row * 3, init_row * 3 + 3):
             for col in range(init_col * 3, init_col * 3 + 3):
                 box_values.append(self.pencil_data[row][col])

@@ -12,7 +12,7 @@ def main():
     # Initialize the Sudoku board
     driver = board_driver.BoardDriver(data.sudoku_puzzle_test)
     # Puzzle classification
-    classification.classify_difficulty(data.sudoku_puzzle_easy2)
+    classification.classify_difficulty(data.sudoku_puzzle_medium)
 
     # Play the game
     # player_play_game(driver)

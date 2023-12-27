@@ -3,7 +3,6 @@ from board_driver import BoardDriver
 from data import Position
 def single_position(driver : BoardDriver):
     """Single position in a row, col, or box that a digit could go"""
-    size = 9
     pencil_data = driver.get_pencil_data()
     for i in range(0,9):
         # Do rows -----------
@@ -78,7 +77,6 @@ def single_position(driver : BoardDriver):
 
 def single_candidate(driver : BoardDriver):
     """Single digit possible for a given square"""
-    # print("entering single cndaidate")
     for row_num, row in enumerate(driver.get_pencil_data().dump_pencil_data()):
         for col_num, pencil_mark in enumerate(row):
             if pencil_mark is not None:
@@ -87,4 +85,67 @@ def single_candidate(driver : BoardDriver):
                     position = Position(row_num, col_num)
                     driver.add_digit(position, digits[0])
                     return True
+    return False
+
+def pointing_pairs_and_triples(driver : BoardDriver):
+    """Uses pointing pairs and/or triples to eliminate candidates"""
+    for i in range(0,9):
+        box_digits = driver.get_board_data(i)
+        pencil_digits = driver.get_pencil_data().get_box(i)
+        for digit in range(1,10):
+            if digit in box_digits:
+                continue
+            failure_flag = False
+            # rows
+            for row_num in range(0,3):
+                digit_count = 0
+                for col_num in range(0,3):#check for pairs or triples in a row
+                    if digit in pencil_digits[row_num*3+col_num].get_pencil_marks():
+                        digit_count+=1
+                if digit == 1:
+                    # if there is a single pencil mark and its not a single position then it cant be a pointing row
+                    break
+                if digit >= 2:
+                    # if there is a pointing row check that there are no other entries in the box
+                    for index in range((row_num + 1) * 3, 9):
+                        if digit in pencil_digits[index].get_pencil_marks():
+                            # duplicate has been found there can no longer be a pointing row or col for this digit
+                            failure_flag = True
+                            break
+                    if failure_flag:
+                        break
+                    else:
+                        # attempt to eliminate candidates using this pair
+                        # if some were eliminated technique is a success
+                        return True
+
+            if failure_flag: # if failure flag this box cannot have a pointing column
+                continue
+            # columns
+            for col_num in range(0,3):
+                digit_count = 0
+                for row_num in range(0,3):#check for pairs or triples in a column
+                    if digit in pencil_digits[row_num*3+col_num].get_pencil_marks():
+                        digit_count+=1
+                if digit == 1:
+                    # if there is a single pencil mark and its not a single position then there cant be a pointing column
+                    break
+                if digit >= 2:
+                    # if there is a pointing column check that there are no other entries in the box
+                    for index in range((row_num + 1) * 3, 9):
+                        if digit in pencil_digits[index].get_pencil_marks():
+                            # duplicate has been found there can no longer be a pointing row or col for this digit
+                            failure_flag = True
+                            break
+                    if failure_flag:
+                        break
+                    else:
+                        # attempt to eliminate candidates using this pair
+                        # if some were eliminated technique is a success
+                        return True
+                    
+    return False
+
+def multiple_lines(driver : BoardDriver):
+    """Uses multiple lines technique to eliminate candidates"""
     return False
