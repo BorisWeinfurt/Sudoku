@@ -1,6 +1,8 @@
 """Contains the various techniques humans would use to solve a sudoku puzzle"""
 from board_driver import BoardDriver
 from data import Position
+import utils
+
 def single_position(driver : BoardDriver):
     """Single position in a row, col, or box that a digit could go"""
     pencil_data = driver.get_pencil_data()
@@ -89,61 +91,68 @@ def single_candidate(driver : BoardDriver):
 
 def pointing_pairs_and_triples(driver : BoardDriver):
     """Uses pointing pairs and/or triples to eliminate candidates"""
-    for i in range(0,9):
-        box_digits = driver.get_board_data(i)
-        pencil_digits = driver.get_pencil_data().get_box(i)
+    for box_to_examine in range(0,9):
+        box_digits = driver.get_box(box_to_examine)
+        pencil_digits = driver.get_pencil_data().get_box(box_to_examine)
         for digit in range(1,10):
             if digit in box_digits:
                 continue
-            failure_flag = False
+            columns_impossible = False
             # rows
-            for row_num in range(0,3):
-                digit_count = 0
-                for col_num in range(0,3):#check for pairs or triples in a row
-                    if digit in pencil_digits[row_num*3+col_num].get_pencil_marks():
-                        digit_count+=1
-                if digit == 1:
-                    # if there is a single pencil mark and its not a single position then it cant be a pointing row
+            for box_row_num in range(0,3):
+                pencil_row = utils.get_row(pencil_digits, box_row_num)
+                num_digit = utils.count_in_pencilmarks(pencil_row, digit)
+                if num_digit == 1:
+                    # if there is a single pencil mark
+                    # AND its not a single position then it cant be a pointing row
+                    # BUT it can still be a pointing column
                     break
-                if digit >= 2:
+                if num_digit >= 2:
                     # if there is a pointing row check that there are no other entries in the box
-                    for index in range((row_num + 1) * 3, 9):
-                        if digit in pencil_digits[index].get_pencil_marks():
-                            # duplicate has been found there can no longer be a pointing row or col for this digit
-                            failure_flag = True
-                            break
-                    if failure_flag:
-                        break
-                    else:
-                        # attempt to eliminate candidates using this pair
-                        # if some were eliminated technique is a success
-                        return True
+                    for clear_rows in range(box_row_num+1, 3):
+                        pencil_row = utils.get_row(pencil_digits, clear_rows)
+                        num_digit = utils.count_in_pencilmarks(pencil_row, digit)
 
-            if failure_flag: # if failure flag this box cannot have a pointing column
+                        if num_digit != 0:
+                            columns_impossible = True
+                            break
+
+                    if columns_impossible:
+                        break
+
+                    # attempt to eliminate candidates using this pair
+                    # if some were eliminated technique is a success
+                    row_num = box_to_examine // 3 * 3 + box_row_num
+                    if utils.pointing_row_eliminate(box_to_examine, driver.get_pencil_data().get_row(row_num), digit):
+                        return True
+            if columns_impossible: # if there cannot be a pointing column skip to the next digit
                 continue
             # columns
-            for col_num in range(0,3):
-                digit_count = 0
-                for row_num in range(0,3):#check for pairs or triples in a column
-                    if digit in pencil_digits[row_num*3+col_num].get_pencil_marks():
-                        digit_count+=1
-                if digit == 1:
-                    # if there is a single pencil mark and its not a single position then there cant be a pointing column
+            for box_col_num in range(0,3):
+                pencil_col = utils.get_col(pencil_digits, box_col_num)
+                num_digit = utils.count_in_pencilmarks(pencil_col, digit)
+                if num_digit == 1:
+                    # if there is a single pencil mark
+                    # AND its not a single position then it cant be a pointing column
                     break
-                if digit >= 2:
+                if num_digit >= 2:
                     # if there is a pointing column check that there are no other entries in the box
-                    for index in range((row_num + 1) * 3, 9):
-                        if digit in pencil_digits[index].get_pencil_marks():
-                            # duplicate has been found there can no longer be a pointing row or col for this digit
-                            failure_flag = True
+                    for clear_cols in range(box_col_num+1, 3):
+                        pencil_col = utils.get_col(pencil_digits, clear_cols)
+                        num_digit = utils.count_in_pencilmarks(pencil_col, digit)
+
+                        if num_digit != 0:
+                            columns_impossible = True
                             break
-                    if failure_flag:
+
+                    if columns_impossible:
                         break
-                    else:
-                        # attempt to eliminate candidates using this pair
-                        # if some were eliminated technique is a success
+
+                    # attempt to eliminate candidates using this pair
+                    # if some were eliminated technique is a success
+                    col_num = box_to_examine % 3 * 3 + box_col_num
+                    if utils.pointing_col_eliminate(box_to_examine, driver.get_pencil_data().get_col(col_num), digit):
                         return True
-                    
     return False
 
 def multiple_lines(driver : BoardDriver):

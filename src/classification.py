@@ -24,6 +24,10 @@ def classify_difficulty(board):
             print("single candidate success")
             difficulty += 100
             continue
+        if techniques.pointing_pairs_and_triples(driver):
+            print("pointing candidates success")
+            difficulty += 100
+            continue
         if driver.is_complete():
             print("Puzzle is solved!")
             break
