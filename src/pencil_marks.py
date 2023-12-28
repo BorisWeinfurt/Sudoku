@@ -69,11 +69,12 @@ class PencilMarkBoard:
 
     def get_row(self, row_index):
         """Get the current digits in the specified row"""
-        return self.pencil_data[row_index]
+        row : List[PencilMarks] = self.pencil_data[row_index]
+        return row
 
     def get_col(self, col_index):
         """Get the current digits in the specified col"""
-        col = []
+        col : List[PencilMarks]= []
         for row in self.pencil_data:
             col.append(row[col_index])
         return col
@@ -110,6 +111,8 @@ class PencilMarks:
         # Remove a digit from the pencil marks if it's present
         if 1 <= digit <= 9 and digit in self.digits:
             self.digits.remove(digit)
+            return True
+        return False
 
     def get_pencil_marks(self):
         """Get the current pencilmarks"""

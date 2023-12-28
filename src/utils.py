@@ -9,15 +9,21 @@ def missing_digits(cur_digits):
             found_missing_digits.append(digit)
     return found_missing_digits
 
-
+def get_box(list, box_num):
+    """Given a list of nine numbers (row or col) there will be 3 boxes along that column,
+       returns the three digits in the specified box (0,1,2)"""
+    row_start = box_num * 3
+    row_end = row_start + 3
+    return list[row_start:row_end]
+       
 def get_row(box, row_num):
-    """Given a 1d representation of a sudoku box return a given row"""
+    """Given a 1d representation of a sudoku box return a given row (0,1,2)"""
     row_start = row_num * 3
     row_end = row_start + 3
     return box[row_start:row_end]
 
 def get_col(box, col_num):
-    """Given a 1d representation of a sudoku box return a given column"""
+    """Given a 1d representation of a sudoku box return a given column (0,1,2)"""
     col_indices = [col_num, col_num + 3, col_num + 6]
     return [box[i] for i in col_indices]
 
@@ -33,27 +39,21 @@ def pointing_row_eliminate(box_to_ignore : int, pencil_row : list[PencilMarks], 
     """eliminate all pencil marks of a digit in a row excluding a specific box
     returns true if some digit was eliminated"""
     num_elim = 0
-    box_indices = [i for i in range(box_to_ignore % 3 * 3, box_to_ignore % 3 * 3 + 3)]
+    box_indices = list(range(box_to_ignore % 3 * 3, box_to_ignore % 3 * 3 + 3))
     for i, pencil_mark in enumerate(pencil_row):
         # Check if the cell is in the specified box to ignore
-        if i not in box_indices and pencil_mark is not None and digit_to_elim in pencil_mark.get_pencil_marks():
-            pencil_mark.remove_digit(digit_to_elim)
+        if i not in box_indices and pencil_mark is not None and pencil_mark.remove_digit(digit_to_elim):
             num_elim += 1
-            # print("Exlude: ", box_indices)
-            # print("removing column ", i)
-            # print(pencil_mark.get_pencil_marks())
-    # print("num elim", num_elim)
     return num_elim > 0
  
 def pointing_col_eliminate(box_to_ignore : int, pencil_col : list[PencilMarks], digit_to_elim):
     """eliminate all pencil marks of a digit in a column excluding a specific box
     returns true if some digit was eliminated"""
     num_elim = 0
-    box_indices = [i for i in range(box_to_ignore // 3 * 3, box_to_ignore // 3 * 3 + 3)]
+    box_indices = list(range(box_to_ignore // 3 * 3, box_to_ignore // 3 * 3 + 3))
 
     for i, pencil_mark in enumerate(pencil_col):
         # Check if the cell is in the specified box to ignore
-        if i not in box_indices and pencil_mark is not None and digit_to_elim in pencil_mark.get_pencil_marks():
-            pencil_mark.remove_digit(digit_to_elim)
+        if i not in box_indices and pencil_mark is not None and pencil_mark.remove_digit(digit_to_elim):
             num_elim += 1
     return num_elim > 0

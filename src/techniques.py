@@ -155,6 +155,96 @@ def pointing_pairs_and_triples(driver : BoardDriver):
                         return True
     return False
 
-def multiple_lines(driver : BoardDriver):
+def box_line_reduction(driver : BoardDriver):
     """Uses multiple lines technique to eliminate candidates"""
+    driver.print_board()
+    print("Entering box line reduction")
+    for box in range(0,3):
+        print("box number ", box)
+        #rows
+        row1 = driver.get_row(box * 3)
+        row2 = driver.get_row(box * 3 + 1)
+        row3 = driver.get_row(box * 3 + 2)
+        
+        for digit in range(1,10):
+            #if the digit appears in one of the rows then there cannot be multiple lines
+            if digit in row1 or digit in row2 or digit in row3:
+                continue
+            pencil_rows = [
+                driver.get_pencil_data().get_row(box * 3),
+                driver.get_pencil_data().get_row(box * 3 + 1),
+                driver.get_pencil_data().get_row(box * 3 + 2)]
+            
+            # print("Starting to look at rows")
+            for row_num, row in enumerate(pencil_rows):
+                num_candidate_boxes = 0
+                box_id = -1
+                for pencil_row_sub_box in range(0, 3):
+                    for pencil_mark in row[pencil_row_sub_box*3:pencil_row_sub_box*3+3]:
+                        if pencil_mark is not None and digit in pencil_mark.get_pencil_marks():
+                            num_candidate_boxes += 1
+                            box_id = pencil_row_sub_box
+                            break
+                #If all possibilities for a row appear in one box then it cannot
+                #Appear in the rest of the box
+                if num_candidate_boxes == 1:
+                    # print("Found a candidate trying to elimintate")
+                    num_pencilmarks_eliminated = 0
+                    for inner_row_num, row in enumerate(pencil_rows):
+                        if inner_row_num != row_num:
+                            for i in range(box_id * 3, box_id * 3 + 3):
+                                if row[i] is not None and row[i].remove_digit(digit):
+                                    num_pencilmarks_eliminated += 1
+                                    
+                    #If the technique resulted in eliminating pencilmarks return true
+                    if num_pencilmarks_eliminated > 0:
+                        # print("eliminate by row")
+                        return True
+                    
+        #columns
+        col1 = driver.get_col(box * 3)
+        col2 = driver.get_col(box * 3 + 1)
+        col3 = driver.get_col(box * 3 + 2)
+        print("begin digit loop for columns")
+        for digit in range(1,10):
+            print(digit)
+            #if the digit appears in one of the cols then there cannot be multiple lines
+            if digit in col1 or digit in col2 or digit in col3:
+                continue
+            pencil_cols = [
+                driver.get_pencil_data().get_col(box * 3),
+                driver.get_pencil_data().get_col(box * 3 + 1),
+                driver.get_pencil_data().get_col(box * 3 + 2)]
+            print("Starting to look at columns")
+            for col_num, col in enumerate(pencil_cols):
+                print("checking column", col_num, "in box set ", box)
+                num_candidate_boxes = 0
+                box_id = -1
+                for pencil_col_sub_box in range(0, 3):
+                    for pencil_mark in col[pencil_col_sub_box*3:pencil_col_sub_box*3+3]:
+                        if pencil_mark is not None and digit in pencil_mark.get_pencil_marks():
+                            num_candidate_boxes += 1
+                            box_id = pencil_col_sub_box
+                            break
+                print("found candidate columns", num_candidate_boxes)
+                #If all possibilities for a col appear in one box then it cannot
+                #Appear in the rest of the box
+                if num_candidate_boxes == 1:
+                    print("some column fit in a single box")
+                    num_pencilmarks_eliminated = 0
+                    for inner_col_num, col in enumerate(pencil_cols):
+                        if inner_col_num != col_num:
+                            for i in range(box_id * 3, box_id * 3 + 3):
+                                if col[i] is not None and col[i].remove_digit(digit):
+                                    num_pencilmarks_eliminated += 1
+                    
+                    print("Eliminated digits", num_pencilmarks_eliminated)            
+                    #If the technique resulted in eliminating pencilmarks return true
+                    if num_pencilmarks_eliminated > 0:
+                        print("eliminate by col")
+                        return True  
+        
+    return False
+
+def hiddenpairstriplesquads():
     return False
