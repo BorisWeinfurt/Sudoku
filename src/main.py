@@ -14,7 +14,7 @@ def main():
     # Puzzle classification
     puzzles = data.sudoku_puzzle_test
     
-    classification.classify_difficulty(puzzles[5])
+    classification.classify_difficulty(puzzles[8])
 
     # Play the game
     # player_play_game(driver)

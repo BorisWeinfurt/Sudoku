@@ -2,6 +2,7 @@
 from board_driver import BoardDriver
 from data import Position
 import utils
+from pencil_marks import PencilMarks
 
 def single_position(driver : BoardDriver):
     """Single position in a row, col, or box that a digit could go"""
@@ -157,10 +158,7 @@ def pointing_pairs_and_triples(driver : BoardDriver):
 
 def box_line_reduction(driver : BoardDriver):
     """Uses multiple lines technique to eliminate candidates"""
-    driver.print_board()
-    print("Entering box line reduction")
     for box in range(0,3):
-        print("box number ", box)
         #rows
         row1 = driver.get_row(box * 3)
         row2 = driver.get_row(box * 3 + 1)
@@ -175,7 +173,6 @@ def box_line_reduction(driver : BoardDriver):
                 driver.get_pencil_data().get_row(box * 3 + 1),
                 driver.get_pencil_data().get_row(box * 3 + 2)]
             
-            # print("Starting to look at rows")
             for row_num, row in enumerate(pencil_rows):
                 num_candidate_boxes = 0
                 box_id = -1
@@ -188,7 +185,6 @@ def box_line_reduction(driver : BoardDriver):
                 #If all possibilities for a row appear in one box then it cannot
                 #Appear in the rest of the box
                 if num_candidate_boxes == 1:
-                    # print("Found a candidate trying to elimintate")
                     num_pencilmarks_eliminated = 0
                     for inner_row_num, row in enumerate(pencil_rows):
                         if inner_row_num != row_num:
@@ -198,16 +194,13 @@ def box_line_reduction(driver : BoardDriver):
                                     
                     #If the technique resulted in eliminating pencilmarks return true
                     if num_pencilmarks_eliminated > 0:
-                        # print("eliminate by row")
                         return True
                     
         #columns
         col1 = driver.get_col(box * 3)
         col2 = driver.get_col(box * 3 + 1)
         col3 = driver.get_col(box * 3 + 2)
-        print("begin digit loop for columns")
         for digit in range(1,10):
-            print(digit)
             #if the digit appears in one of the cols then there cannot be multiple lines
             if digit in col1 or digit in col2 or digit in col3:
                 continue
@@ -215,9 +208,7 @@ def box_line_reduction(driver : BoardDriver):
                 driver.get_pencil_data().get_col(box * 3),
                 driver.get_pencil_data().get_col(box * 3 + 1),
                 driver.get_pencil_data().get_col(box * 3 + 2)]
-            print("Starting to look at columns")
             for col_num, col in enumerate(pencil_cols):
-                print("checking column", col_num, "in box set ", box)
                 num_candidate_boxes = 0
                 box_id = -1
                 for pencil_col_sub_box in range(0, 3):
@@ -226,11 +217,9 @@ def box_line_reduction(driver : BoardDriver):
                             num_candidate_boxes += 1
                             box_id = pencil_col_sub_box
                             break
-                print("found candidate columns", num_candidate_boxes)
                 #If all possibilities for a col appear in one box then it cannot
                 #Appear in the rest of the box
                 if num_candidate_boxes == 1:
-                    print("some column fit in a single box")
                     num_pencilmarks_eliminated = 0
                     for inner_col_num, col in enumerate(pencil_cols):
                         if inner_col_num != col_num:
@@ -238,13 +227,36 @@ def box_line_reduction(driver : BoardDriver):
                                 if col[i] is not None and col[i].remove_digit(digit):
                                     num_pencilmarks_eliminated += 1
                     
-                    print("Eliminated digits", num_pencilmarks_eliminated)            
                     #If the technique resulted in eliminating pencilmarks return true
                     if num_pencilmarks_eliminated > 0:
-                        print("eliminate by col")
                         return True  
         
     return False
 
-def hiddenpairstriplesquads():
+def naked_and_hidden_sets(driver: BoardDriver):
+    pencil_data = driver.get_pencil_data()
+
+    set_sizes = [2, 3]
+    set_types = ["naked", "hidden"] # 0 is naked and 1 is hidden
+    
+    def process_sets(set_size, set_type, pencil_data : list[list[list[PencilMarks]]]):
+        for i, data_type in enumerate(pencil_data):
+            for j, list in enumerate(data_type):
+                if getattr(utils, f"{set_type}_set")(set_size, list):
+                    return True
+                
+        return False
+    
+    data : list[list[list[PencilMarks]]] = [[],[],[]]
+    for i in range(9):
+            data[0].append(pencil_data.get_row(i))
+            data[1].append(pencil_data.get_col(i))
+            data[2].append(pencil_data.get_box(i))
+            
+            
+    for set_size in set_sizes:
+        for set_type in set_types:
+            if process_sets(set_size, set_type, data):
+                return True
+
     return False

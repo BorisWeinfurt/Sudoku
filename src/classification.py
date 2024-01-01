@@ -15,13 +15,14 @@ def classify_difficulty(board):
     driver = board_driver.BoardDriver(board)
 
     difficulty = 0
-    while True:
-        if techniques.single_position(driver):
-            # print("single position success")
-            difficulty += 100
-            continue
+    while not driver.is_complete():
+        
         if techniques.single_candidate(driver):
             # print("single candidate success")
+            difficulty += 70
+            continue
+        if techniques.single_position(driver):
+            # print("single position success")
             difficulty += 100
             continue
         if techniques.pointing_pairs_and_triples(driver):
@@ -29,15 +30,15 @@ def classify_difficulty(board):
             difficulty += 350
             continue
         if techniques.box_line_reduction(driver):
-            print("box_line reduction success")
+            # print("box_line reduction success")
             difficulty += 700
             continue
-        if driver.is_complete():
-            print("Puzzle is solved!")
-            break
-        print("puzzle cannot be solved")
+        if techniques.naked_and_hidden_sets(driver):
+            difficulty += 900
+            continue
+        print("Puzzle cannot be solved")
         driver.print_board()
         break
     
-    # driver.print_board()
+    driver.print_board()
     print("Difficulty: ", difficulty)

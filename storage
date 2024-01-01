@@ -1,0 +1,31 @@
+from typing import List
+
+def find_naked_set(size: int, pencil_marks: List[PencilMarks]) -> bool:
+    """Find and eliminate naked sets of a given size in the row."""
+    raw_marks = [mark.get_pencil_marks() for mark in pencil_marks if mark is not None]
+
+    for set_num, pencil_set in enumerate(raw_marks):
+        indexes = find_matching_sets(set_num, pencil_set, raw_marks)
+        if len(indexes) == size:
+            num_eliminated = eliminate_candidates(indexes, pencil_marks)
+            if num_eliminated > 0:
+                return True
+    return False
+
+def find_matching_sets(current_set_num: int, current_set: set, all_sets: List[set]) -> List[int]:
+    """Find sets in the row that match the current set."""
+    indexes = [current_set_num]
+    for subset_num, subset in enumerate(all_sets):
+        if subset_num != current_set_num and set(subset).issubset(current_set):
+            indexes.append(subset_num)
+    return indexes
+
+def eliminate_candidates(indexes: List[int], pencil_marks: List[PencilMarks]) -> int:
+    """Eliminate candidates from other pencil marks."""
+    num_eliminated = 0
+    for mark_num, mark in enumerate(pencil_marks):
+        if mark is not None and mark_num not in indexes:
+            for num_to_elim in set(pencil_marks[indexes[0]]):
+                if mark.remove_digit(num_to_elim):
+                    num_eliminated += 1
+    return num_eliminated

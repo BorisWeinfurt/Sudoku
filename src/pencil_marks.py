@@ -96,7 +96,7 @@ class PencilMarks:
     """
     def __init__(self):
         # Initialize with all digits marked
-        self.digits = []
+        self.digits : list[int] = []
 
     def add_digit(self, digit):
         """
