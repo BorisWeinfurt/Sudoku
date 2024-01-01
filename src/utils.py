@@ -64,7 +64,6 @@ def pointing_col_eliminate(box_to_ignore : int, pencil_col : list[PencilMarks], 
             num_elim += 1
     return num_elim > 0
 
-
 def naked_set(size : int, pencil_marks : list[PencilMarks]):
     """Checks if there is a naked set that is size large and removes those pencil marks from the rest of the row"""
     """If some pencilmarks were removed then return true"""
@@ -130,3 +129,14 @@ def hidden_set(size : int, pencil_marks : list[PencilMarks]):
                         num_eliminated += 1
             if num_eliminated > 0:
                 return True
+
+def list_has_pair(list : list[PencilMarks], digit):
+    """Checks if the given list has a pair, if yes return indexes of the pair otherwise return none"""
+    indexes = []
+    for index, mark in enumerate(list):
+        if mark is not None and digit in mark.get_pencil_marks():
+            indexes.append(index)
+    
+    if len(indexes) != 2:
+        return None
+    return indexes

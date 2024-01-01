@@ -36,9 +36,17 @@ def classify_difficulty(board):
         if techniques.naked_and_hidden_sets(driver):
             difficulty += 900
             continue
+        if techniques.xwing(driver):
+            print("succsesful xwing")
+            difficulty += 1300
+            continue
+        else:
+            print("xwing failed")
+            
         print("Puzzle cannot be solved")
         driver.print_board()
-        break
+        return -1
     
     driver.print_board()
     print("Difficulty: ", difficulty)
+    return difficulty 

@@ -234,6 +234,7 @@ def box_line_reduction(driver : BoardDriver):
     return False
 
 def naked_and_hidden_sets(driver: BoardDriver):
+    "Finds the naked and hidden sets of size 2 and 3 in a given puzzle and eliminates relevant pencilmarks"
     pencil_data = driver.get_pencil_data()
 
     set_sizes = [2, 3]
@@ -260,3 +261,59 @@ def naked_and_hidden_sets(driver: BoardDriver):
                 return True
 
     return False
+
+def xwing(driver : BoardDriver):
+    "Attempts to use xwing to eliminate some pencilmarks"
+    
+    for digit in range(1,10):
+        
+        for row in range(0,8): #skip last row
+            if digit in driver.get_row(row):
+                continue
+            pencil_row = driver.get_pencil_data().get_row(row)
+            res = utils.list_has_pair(pencil_row, digit)
+            if res is not None:
+                for x_row in range(row+1, 9):
+                    if digit in driver.get_row(x_row):
+                        continue
+                    pencil_x_row = driver.get_pencil_data().get_row(x_row)
+                    x_res = utils.list_has_pair(pencil_x_row, digit)
+                    if res is not None and res == x_res:
+                        print("found a pair of indexs: , ", res, "with the digit", digit)
+                        print("rows", row, x_row)
+                        eliminated = False
+                        for loop_row in range(0,9):
+                            if loop_row != row and loop_row != x_row:
+                                print("checking col", loop_row)
+                                mark = driver.get_pencil_data().get_row(loop_row)[res[0]]
+                                xmark = driver.get_pencil_data().get_row(loop_row)[res[1]]
+                                row_eliminated = mark is not None and mark.remove_digit(digit)
+                                x_row_eliminated = xmark is not None and xmark.remove_digit(digit)
+                                print(row_eliminated, x_row_eliminated)
+                                eliminated = eliminated or row_eliminated or x_row_eliminated
+                        if eliminated:
+                            print(driver.get_pencil_data().get_row(8)[8].get_pencil_marks())
+                            return True
+        
+        for col in range(0,8): #skip last col
+            if digit in driver.get_col(col):
+                continue
+            pencil_col = driver.get_pencil_data().get_col(col)
+            res = utils.list_has_pair(pencil_col, digit)
+            if res is not None:
+                for x_col in range(col+1, 9):
+                    if digit in driver.get_col(x_col):
+                        continue
+                    pencil_x_col = driver.get_pencil_data().get_col(x_col)
+                    x_res = utils.list_has_pair(pencil_x_col, digit)
+                    if res is not None and res == x_res:
+                        eliminated = False
+                        for loop_col in range(0,9):
+                            if loop_col != col and loop_col != x_col:
+                                mark = driver.get_pencil_data().get_col(loop_col)[res[0]]
+                                xmark = driver.get_pencil_data().get_col(loop_col)[res[1]]
+                                col_eliminated = mark is not None and mark.remove_digit(digit)
+                                x_col_eliminated = xmark is not None and xmark.remove_digit(digit)
+                                eliminated = eliminated or col_eliminated or x_col_eliminated
+                        if eliminated:
+                            return True
