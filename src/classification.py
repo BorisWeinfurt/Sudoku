@@ -37,12 +37,14 @@ def classify_difficulty(board):
             difficulty += 900
             continue
         if techniques.xwing(driver):
-            print("succsesful xwing")
-            difficulty += 1300
+            # print("succsesful xwing")
+            difficulty += 2800
             continue
-        else:
-            print("xwing failed")
-            
+        if techniques.swordfish(driver):
+            # print("succsesful xwing")
+            difficulty += 7000
+            continue
+        
         print("Puzzle cannot be solved")
         driver.print_board()
         return -1

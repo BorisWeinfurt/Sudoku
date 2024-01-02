@@ -271,49 +271,121 @@ def xwing(driver : BoardDriver):
             if digit in driver.get_row(row):
                 continue
             pencil_row = driver.get_pencil_data().get_row(row)
-            res = utils.list_has_pair(pencil_row, digit)
+            res = utils.list_has_set(pencil_row, digit, [2])
             if res is not None:
                 for x_row in range(row+1, 9):
                     if digit in driver.get_row(x_row):
                         continue
                     pencil_x_row = driver.get_pencil_data().get_row(x_row)
-                    x_res = utils.list_has_pair(pencil_x_row, digit)
+                    x_res = utils.list_has_set(pencil_x_row, digit, [2])
+                    
+                    # check if the pairs are in the same rows to form an xwing
                     if res is not None and res == x_res:
-                        print("found a pair of indexs: , ", res, "with the digit", digit)
-                        print("rows", row, x_row)
                         eliminated = False
                         for loop_row in range(0,9):
+                            
                             if loop_row != row and loop_row != x_row:
-                                print("checking col", loop_row)
+                                #get pencil_mark to try to remove
                                 mark = driver.get_pencil_data().get_row(loop_row)[res[0]]
                                 xmark = driver.get_pencil_data().get_row(loop_row)[res[1]]
+                                # attempt to remove pencilmarks
                                 row_eliminated = mark is not None and mark.remove_digit(digit)
                                 x_row_eliminated = xmark is not None and xmark.remove_digit(digit)
-                                print(row_eliminated, x_row_eliminated)
                                 eliminated = eliminated or row_eliminated or x_row_eliminated
                         if eliminated:
-                            print(driver.get_pencil_data().get_row(8)[8].get_pencil_marks())
                             return True
         
         for col in range(0,8): #skip last col
             if digit in driver.get_col(col):
                 continue
             pencil_col = driver.get_pencil_data().get_col(col)
-            res = utils.list_has_pair(pencil_col, digit)
+            res = utils.list_has_set(pencil_col, digit, [2])
             if res is not None:
                 for x_col in range(col+1, 9):
                     if digit in driver.get_col(x_col):
                         continue
                     pencil_x_col = driver.get_pencil_data().get_col(x_col)
-                    x_res = utils.list_has_pair(pencil_x_col, digit)
+                    x_res = utils.list_has_set(pencil_x_col, digit, [2])
+                    
+                    # check if the pairs are in the same rows to form an xwing
                     if res is not None and res == x_res:
                         eliminated = False
                         for loop_col in range(0,9):
                             if loop_col != col and loop_col != x_col:
+                                # get pencil_mark to try and remove the digit
                                 mark = driver.get_pencil_data().get_col(loop_col)[res[0]]
                                 xmark = driver.get_pencil_data().get_col(loop_col)[res[1]]
+                                # try to remove the digit from the pencilmark
                                 col_eliminated = mark is not None and mark.remove_digit(digit)
                                 x_col_eliminated = xmark is not None and xmark.remove_digit(digit)
                                 eliminated = eliminated or col_eliminated or x_col_eliminated
                         if eliminated:
                             return True
+                        
+def swordfish(driver : BoardDriver):
+    """Utilizes the swordfish technique to elimintate candidates"""
+    
+    def directional_swordfish(dig_list : list[list[int]], pencil_list : list[list[PencilMarks]]):
+        """Given a 2d array of digits representing a sudoku (either rows or columns)"""
+        """Uses swordfish to try and delete pencilmarks returns true if there are succsesful deletions"""
+        for digit in range(1,10):
+            
+            for parent_row_num in range(0,7): #skip last two rows
+                if digit in dig_list[parent_row_num]:
+                    continue
+                
+                pencil_row = pencil_list[parent_row_num]
+                parent_row = utils.list_has_set(pencil_row, digit, [2,3])
+                
+                if parent_row is not None:
+                    for first_child_row_num in range(parent_row_num+1, 8):
+                        if parent_row_num == first_child_row_num or digit in dig_list[first_child_row_num]:
+                            continue
+                        pencil_child1_row = pencil_list[first_child_row_num]
+                        first_child_row = utils.list_has_set(pencil_child1_row, digit, [2,3])
+                        
+                        if first_child_row is not None and len(set(first_child_row).union(set(parent_row))) <= 3:
+                            
+                            for second_child_row_num in range(first_child_row_num+1, 8):
+                                conditions = [
+                                    parent_row_num == first_child_row_num,
+                                    first_child_row_num == second_child_row_num,
+                                    digit in dig_list[second_child_row_num]
+                                ]
+                                if any(conditions):
+                                    continue
+                                
+                                pencil_child2_row = pencil_list[second_child_row_num]
+                                second_child_row = utils.list_has_set(pencil_child2_row, digit, [2,3])
+                                
+                                if second_child_row is None:
+                                    break
+                                
+                                swordfish_cols = set(second_child_row).union(set(first_child_row).union(set(parent_row)))
+                                if len(swordfish_cols) <= 3:
+                                    swordfish_rows = [parent_row_num, first_child_row_num, second_child_row_num]
+                                    elimination = False
+                                    for elimination_row in range(0,9):
+                                        if elimination_row in swordfish_rows:
+                                            continue
+                                        
+                                        for elimination_col in swordfish_cols:
+                                            mark : PencilMarks= pencil_list[elimination_row][elimination_col]
+                                            if mark is not None and mark.remove_digit(digit):
+                                                elimination = True
+                                    if elimination:
+                                        return True
+        return False
+    
+    row_dig = []
+    col_dig = []
+    row_pencil = []
+    col_pencil = []
+    for i in range(0,9):
+        row_dig.append(driver.get_row(i))
+        col_dig.append(driver.get_col(i))
+        row_pencil.append(driver.get_pencil_data().get_row(i))
+        col_pencil.append(driver.get_pencil_data().get_col(i))
+        
+    return directional_swordfish(row_dig, row_pencil) or directional_swordfish(col_dig, col_pencil)
+

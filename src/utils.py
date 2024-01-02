@@ -130,13 +130,13 @@ def hidden_set(size : int, pencil_marks : list[PencilMarks]):
             if num_eliminated > 0:
                 return True
 
-def list_has_pair(list : list[PencilMarks], digit):
-    """Checks if the given list has a pair, if yes return indexes of the pair otherwise return none"""
+def list_has_set(list : list[PencilMarks], digit, acceptable_set_sizes : list[int]):
+    """Checks if the given list has a set of digits in an acceptable sizes, if yes return indexes of the set otherwise return none"""
     indexes = []
     for index, mark in enumerate(list):
         if mark is not None and digit in mark.get_pencil_marks():
             indexes.append(index)
     
-    if len(indexes) != 2:
-        return None
-    return indexes
+    if len(indexes) in acceptable_set_sizes:
+        return indexes
+    return None
