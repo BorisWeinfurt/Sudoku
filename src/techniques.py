@@ -3,6 +3,7 @@ from board_driver import BoardDriver
 from data import Position
 import utils
 from pencil_marks import PencilMarks
+from pprint import pprint
 
 def single_position(driver : BoardDriver):
     """Single position in a row, col, or box that a digit could go"""
@@ -389,3 +390,74 @@ def swordfish(driver : BoardDriver):
         
     return directional_swordfish(row_dig, row_pencil) or directional_swordfish(col_dig, col_pencil)
 
+def rectange_elimination(driver : BoardDriver):
+    """Uses empty rectanges to try and eliminate pencil marks"""
+
+    def directional_rectangle_eliminate(digit_list : list[list[int]], pencil_list : list[list[PencilMarks]]):
+        for digit in range(1,10):
+            for row_num in range(0,9):
+                if digit in digit_list[row_num]:
+                    continue
+                
+                # find if there is a hinge cell candidate
+                for col_num, row_mark in enumerate(pencil_list[row_num]):
+                    if row_mark is None or digit not in row_mark.get_pencil_marks():
+                        continue
+                    
+                    # if one is found, check if it would anything from its column that isnt in the same box
+                    column = [x[col_num] for x in pencil_list]
+                    for forcing_row_num, col_mark in enumerate(column):
+                        vertical_box = row_num // 3 * 3
+                        if (col_mark is None or digit not in col_mark.get_pencil_marks()) or forcing_row_num in range(vertical_box, vertical_box+3):
+                            continue
+                        # if something is eliminated see if its forced somewhere else in its row that isnt in the same box
+                        row_candidates = utils.list_has_set(pencil_list[forcing_row_num], digit, [2])
+                        if row_candidates is None or col_num not in row_candidates:
+                            continue
+                        
+                        
+                        row_candidates.remove(col_num)
+                        forcing_col = row_candidates[0]
+                        # check that its not in the same box
+                        horizontal_box = col_num // 3 * 3
+                        if forcing_col in range(horizontal_box, horizontal_box+3):
+                            continue
+                        # now check whether the newly forced digit creates an impossible box
+                        box_num = (row_num // 3) * 3 + forcing_col // 3
+                        start_row = (box_num // 3) * 3
+                        start_col = (box_num % 3) * 3
+
+                        box_values = []
+                        for row in range(start_row, start_row  + 3):
+                            for col in range(start_col, start_col + 3):
+                                box_values.append(digit_list[row][col])
+                                
+                        if digit in box_values:
+                            continue
+                        num_candidates = 0
+                        for box_row_num in range(start_row, start_row+3):
+                            if box_row_num == row_num:
+                                continue
+                            box_row = pencil_list[box_row_num]
+                            for box_col_num in range(start_col, start_col+3):
+                                if box_col_num == forcing_col:
+                                    continue
+                                
+                                if box_row[box_col_num] is not None and digit in box_row[box_col_num].get_pencil_marks():
+                                    num_candidates += 1
+                        # we have created an impossible box therfore the original mark was wrong
+                        if num_candidates == 0:
+                            row_mark.remove_digit(digit)
+                            return True
+                        
+    row_dig = []
+    col_dig = []
+    row_pencil = []
+    col_pencil = []
+    for i in range(0,9):
+        row_dig.append(driver.get_row(i))
+        col_dig.append(driver.get_col(i))
+        row_pencil.append(driver.get_pencil_data().get_row(i))
+        col_pencil.append(driver.get_pencil_data().get_col(i))
+
+    return directional_rectangle_eliminate(row_dig, row_pencil) or directional_rectangle_eliminate(col_dig, col_pencil)

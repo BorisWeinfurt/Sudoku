@@ -3,8 +3,7 @@ from itertools import combinations
 from functools import reduce
 import itertools
 from pencil_marks import PencilMarks
-from typing import Dict, List
-from pprint import pprint
+from typing import List
 
 def missing_digits(cur_digits):
     """Find the missing digits from the range 1-9 in from any list"""

@@ -34,11 +34,16 @@ def classify_difficulty(board):
             difficulty += 700
             continue
         if techniques.naked_and_hidden_sets(driver):
+            # print("Naked hidden sets succes")
             difficulty += 900
             continue
         if techniques.xwing(driver):
             # print("succsesful xwing")
             difficulty += 2800
+            continue
+        if techniques.rectange_elimination(driver):
+            # print("rectangle success")
+            difficulty += 5000
             continue
         if techniques.swordfish(driver):
             # print("succsesful xwing")
@@ -49,6 +54,6 @@ def classify_difficulty(board):
         driver.print_board()
         return -1
     
-    driver.print_board()
+    # driver.print_board()
     print("Difficulty: ", difficulty)
     return difficulty 
