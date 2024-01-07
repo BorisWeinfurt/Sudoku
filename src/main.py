@@ -18,11 +18,11 @@ def main():
         print("Invalid input")
         return
     
-    print("Enter a difficulty: (e)asy, (m)edium, (h)ard, (t)ricky")
+    print("Enter a difficulty: (e)asy, (m)edium, (h)ard, (t)ricky, (f)iendish")
     diff = input()
     
-    if diff in ["e", "m", "h", "t"]:
-            difficulty_mapping = {"e": 0, "m": 1, "h": 2, "t": 3}
+    if diff in ["e", "m", "h", "t","f"]:
+            difficulty_mapping = {"e": 0, "m": 1, "h": 2, "t": 3, "f":4}
             difficulty_index = difficulty_mapping[diff]
 
     
