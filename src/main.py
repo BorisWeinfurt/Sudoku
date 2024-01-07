@@ -13,10 +13,12 @@ def main():
     # driver = board_driver.BoardDriver(data.sudoku_puzzle_test)
     # Puzzle classification
     puzzles = data.sudoku_puzzle_test
-    for puzzle_num, puzzle in enumerate(puzzles):
-        print("Puzzle num", puzzle_num)
-        classification.classify_difficulty(puzzle)
-    # classification.classify_difficulty(puzzles[7])
+    
+    classification.generate_difficulty(data.solved_board1, 1)
+    # for puzzle_num, puzzle in enumerate(puzzles):
+    #     print("Puzzle num", puzzle_num)
+    #     classification.classify_difficulty(puzzle)
+    # # classification.classify_difficulty(puzzles[7])
 
     # Play the game
     # player_play_game(driver)

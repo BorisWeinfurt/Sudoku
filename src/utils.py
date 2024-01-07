@@ -2,6 +2,7 @@
 from itertools import combinations
 from functools import reduce
 import itertools
+import random
 from pencil_marks import PencilMarks
 from typing import List
 
@@ -139,3 +140,20 @@ def list_has_set(list : list[PencilMarks], digit, acceptable_set_sizes : list[in
     if len(indexes) in acceptable_set_sizes:
         return indexes
     return None
+
+def remove_digit_from_board(board : list[list[int]]):
+    """Removes a random rotationaly symmetric pair of digits from the board"""
+    
+    while True:
+        # Choose a random row and column for the first digit
+        row1 = random.randint(0, 8)
+        col1 = random.randint(0, 8)
+
+        # Choose a second digit that is rotationally symmetric to the first
+        row2 = 8 - row1
+        col2 = 8 - col1
+        
+        if board[row1][col1] != 0 and board[row2][col2] != 0:
+            board[row1][col1] = 0
+            board[row2][col2] = 0
+            return
