@@ -5,6 +5,7 @@ User will be able to specify which functionality will be used
 import board_driver
 import classification
 from pprint import pprint
+from data import Position
 
 
 def main():
@@ -50,7 +51,7 @@ def player_play_game(driver):
         digit = int(input("Enter the digit (1-9): "))
 
         # Validate and add the player's guess
-        position = boards.Position(row, col)
+        position = Position(row, col)
         if driver.add_digit(position, digit):
             print("Your guess is correct!\n")
         else:
