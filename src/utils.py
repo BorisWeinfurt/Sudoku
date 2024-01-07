@@ -1,5 +1,4 @@
 """Helper functions"""
-from itertools import combinations
 from functools import reduce
 import itertools
 import random
@@ -33,7 +32,7 @@ def get_col(box, col_num):
     col_indices = [col_num, col_num + 3, col_num + 6]
     return [box[i] for i in col_indices]
 
-def count_in_pencilmarks(lst : list[PencilMarks], digit):
+def count_in_pencilmarks(lst : "list[PencilMarks]", digit):
     """Checks how times the list of pencil_marks contains the given digit."""
     count = 0
     for marks in lst:
@@ -41,7 +40,7 @@ def count_in_pencilmarks(lst : list[PencilMarks], digit):
             count+=1
     return count
 
-def pointing_row_eliminate(box_to_ignore : int, pencil_row : list[PencilMarks], digit_to_elim):
+def pointing_row_eliminate(box_to_ignore : int, pencil_row : "list[PencilMarks]", digit_to_elim):
     """eliminate all pencil marks of a digit in a row excluding a specific box
     returns true if some digit was eliminated"""
     num_elim = 0
@@ -52,7 +51,7 @@ def pointing_row_eliminate(box_to_ignore : int, pencil_row : list[PencilMarks], 
             num_elim += 1
     return num_elim > 0
  
-def pointing_col_eliminate(box_to_ignore : int, pencil_col : list[PencilMarks], digit_to_elim):
+def pointing_col_eliminate(box_to_ignore : int, pencil_col : "list[PencilMarks]", digit_to_elim):
     """eliminate all pencil marks of a digit in a column excluding a specific box
     returns true if some digit was eliminated"""
     num_elim = 0
@@ -64,7 +63,7 @@ def pointing_col_eliminate(box_to_ignore : int, pencil_col : list[PencilMarks], 
             num_elim += 1
     return num_elim > 0
 
-def naked_set(size : int, pencil_marks : list[PencilMarks]):
+def naked_set(size : int, pencil_marks : "list[PencilMarks]"):
     """Checks if there is a naked set that is size large and removes those pencil marks from the rest of the row"""
     """If some pencilmarks were removed then return true"""
     
@@ -98,7 +97,7 @@ def naked_set(size : int, pencil_marks : list[PencilMarks]):
                         if num_eliminated > 0:
                             return True
                         
-def hidden_set(size : int, pencil_marks : list[PencilMarks]):
+def hidden_set(size : int, pencil_marks : "list[PencilMarks]"):
     """Checks if there is a hidden set that is size large and removes excess pencil marks from the set"""
     pruned_pencil_marks : list[PencilMarks] = [x for x in pencil_marks if x != None]
    
@@ -130,7 +129,7 @@ def hidden_set(size : int, pencil_marks : list[PencilMarks]):
             if num_eliminated > 0:
                 return True
 
-def list_has_set(list : list[PencilMarks], digit, acceptable_set_sizes : list[int]):
+def list_has_set(list : "list[PencilMarks]", digit, acceptable_set_sizes : "list[int]"):
     """Checks if the given list has a set of digits in an acceptable sizes, if yes return indexes of the set otherwise return none"""
     indexes = []
     for index, mark in enumerate(list):
@@ -141,7 +140,7 @@ def list_has_set(list : list[PencilMarks], digit, acceptable_set_sizes : list[in
         return indexes
     return None
 
-def remove_digit_from_board(board : list[list[int]]):
+def remove_digit_from_board(board : "list[list[int]]"):
     """Removes a random rotationaly symmetric pair of digits from the board"""
     
     while True:
@@ -157,3 +156,4 @@ def remove_digit_from_board(board : list[list[int]]):
             board[row1][col1] = 0
             board[row2][col2] = 0
             return
+    

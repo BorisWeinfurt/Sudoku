@@ -1,9 +1,8 @@
 """Contains the various techniques humans would use to solve a sudoku puzzle"""
 from board_driver import BoardDriver
-from data import Position
 import utils
+from data import Position
 from pencil_marks import PencilMarks
-from pprint import pprint
 
 def single_position(driver : BoardDriver):
     """Single position in a row, col, or box that a digit could go"""
@@ -241,7 +240,7 @@ def naked_and_hidden_sets(driver: BoardDriver):
     set_sizes = [2, 3]
     set_types = ["naked", "hidden"] # 0 is naked and 1 is hidden
     
-    def process_sets(set_size, set_type, pencil_data : list[list[list[PencilMarks]]]):
+    def process_sets(set_size, set_type, pencil_data : "list[list[list[PencilMarks]]]"):
         for i, data_type in enumerate(pencil_data):
             for j, list in enumerate(data_type):
                 if getattr(utils, f"{set_type}_set")(set_size, list):
@@ -326,7 +325,7 @@ def xwing(driver : BoardDriver):
 def swordfish(driver : BoardDriver):
     """Utilizes the swordfish technique to elimintate candidates"""
     
-    def directional_swordfish(dig_list : list[list[int]], pencil_list : list[list[PencilMarks]]):
+    def directional_swordfish(dig_list : "list[list[int]]", pencil_list : "list[list[PencilMarks]]"):
         """Given a 2d array of digits representing a sudoku (either rows or columns)"""
         """Uses swordfish to try and delete pencilmarks returns true if there are succsesful deletions"""
         for digit in range(1,10):
@@ -393,7 +392,7 @@ def swordfish(driver : BoardDriver):
 def rectange_elimination(driver : BoardDriver):
     """Uses empty rectanges to try and eliminate pencil marks"""
 
-    def directional_rectangle_eliminate(digit_list : list[list[int]], pencil_list : list[list[PencilMarks]]):
+    def directional_rectangle_eliminate(digit_list : "list[list[int]]", pencil_list : "list[list[PencilMarks]]"):
         for digit in range(1,10):
             for row_num in range(0,9):
                 if digit in digit_list[row_num]:
